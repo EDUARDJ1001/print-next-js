@@ -20,14 +20,7 @@ const TicketsTest: React.FC = () => {
     const [buttonData, setButtonData] = useState<Servicio[]>([]);
     const [vendedores, setVendedores] = useState<Vendedor[]>([]);
     const [vendedorSeleccionado, setVendedorSeleccionado] = useState<number | null>(null);
-    const [ultimoId, setUltimoId] = useState<number>(1000);
     const apiHost = process.env.NEXT_PUBLIC_API_HOST || "";
-
-    const obtenerUltimoId = async (): Promise<number> => {
-        const nuevoId = ultimoId + 1;
-        setUltimoId(nuevoId);
-        return nuevoId;
-    };
 
     const fetchButtonData = async () => {
         try {
@@ -66,33 +59,19 @@ const TicketsTest: React.FC = () => {
         fetchVendedores();
     }, []);
 
-    const selectVendedor = async () => {
-        try {
-            const response = await fetch(`${apiHost}/api/servicios`);
-            if (!response.ok) {
-                throw new Error("Error al obtener los datos");
-            }
-            const data = await response.json();
-        }
-        catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    };
-
     const imprimirTicket = async (boleto: Servicio) => {
-        const id = await obtenerUltimoId();
         const ticketContent = `
         <html>
         <head>
-                    <title>Ticket</title>
-                    <style>
-                        @page {
-                            size: auto; 
-                            margin: 5; 
-                        }
-                        @media print {
-                            body { 
-                                font-family: Arial, sans-serif; 
+            <title>Ticket</title>
+            <style>
+                @page {
+                    size: auto; 
+                    margin: 5; 
+                    }
+                    @media print {
+                        body { 
+                            font-family: Arial, sans-serif; 
                                 text-align: center; 
                                 margin: 5; 
                                 padding: 0; 
@@ -103,24 +82,27 @@ const TicketsTest: React.FC = () => {
                                 overflow: hidden;
                             }
                             .ticket {
-                                width: 80mm;
+                                width: 200mm;
                                 padding: 1px;
                                 margin: 0 auto;
                                 display: block;
                                 text-align: center;
                             }
                             .ticket h2 {
+                                font-size: 16mm;
                                 margin: 2px 0;
                             }
                             .ticket h4 {
+                                font-size: 14mm;
                                 margin: 2px 0;
                             }
                             .ticket p {
+                                font-size: 12mm;
                                 margin: 2px 0;
                             }
                         }
                     </style>
-                </head>
+            </head>
         <body>
             <div class="ticket">
                 <h2>Impresión NODE JS</h2>
